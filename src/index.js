@@ -1,4 +1,5 @@
 import express from "express";
+import dbConnection from "./config/db";
 import ApiRouter from "./routes";
 
 const app = express(
@@ -15,7 +16,7 @@ const connectionString = process.env.MONGODB_URI;
 
 const server = async () => {
     try {
-        await connectDB(process.env.MONGO_URI);
+        await dbConnection(connectionString);
         // Listen to specified port
         app.listen(port, console.log(`Server started on port ${port}...`));
     } catch (error) {
