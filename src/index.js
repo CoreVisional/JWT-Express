@@ -1,12 +1,9 @@
-import express from "express";
-import dbConnection from "./config/db";
-import ApiRouter from "./routes";
+const express = require("express");
+const dbConnection = require("./config/db");
+const ApiRouter = require("./routes");
 
-const app = express(
-    express.json({
-        limit: "10kb",
-    })
-);
+const app = express();
+app.use(express.json({ limit: "10kb" }));
 
 // Port to listen to
 const PORT = process.env.PORT || 8000;
@@ -18,7 +15,9 @@ const server = async () => {
     try {
         await dbConnection(connectionString);
         // Listen to specified port
-        app.listen(port, console.log(`Server started on port ${port}...`));
+        app.listen(PORT, () =>
+            console.log(`Server started on port ${PORT}...`)
+        );
     } catch (error) {
         console.log(error);
     }

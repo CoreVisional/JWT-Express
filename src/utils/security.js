@@ -1,4 +1,4 @@
-import crypto from "crypto";
+const crypto = require("crypto");
 
 const generateSalt = () => {
     return crypto.randomBytes(16).toString("hex");
@@ -10,7 +10,7 @@ const hashPassword = (password, salt) => {
         .toString("hex");
 };
 
-export {
+module.exports = {
     generateSalt,
-    hashPassword
+    hashPassword,
 };

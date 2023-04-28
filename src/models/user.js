@@ -1,4 +1,6 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const { generateSalt, hashPassword } = require("./security");
 
 const { Schema } = mongoose;
 
@@ -15,7 +17,43 @@ const UserSchema = new Schema({
             "Please enter a valid email address",
         ],
         required: [true, "cannot be blank"],
-    }
+    },
+    passwordHash: String,
+    passwordSalt: String,
 });
 
-export default mongoose.model("User", UserSchema);
+UserSchema.methods.setPassword = function (password) {
+    this.passwordSalt = generateSalt();
+    this.passwordHash = hashPassword(password, this.passwordSalt);
+};
+
+UserSchema.methods.validPassword = function (password) {
+    return this.passwordHash === hashPassword(password, this.passwordSalt);
+};
+
+UserSchema.methods.generateJWT = function () {
+    const today = new Date();
+    const exp = new Date(today);
+    exp.setDate(today.getDate() + 60);
+
+    return jwt.sign(
+        {
+            userid: this._id,
+            username: this.username,
+            iat: Math.floor(today.getTime() / 1000),
+            exp: Math.floor(exp.getTime() / 1000),
+        },
+        secret
+    );
+};
+
+UserSchema.methods.verifyJWT = function (token) {
+    try {
+        jwt.verify(token, secret);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};
+
+module.exports = mongoose.model("User", UserSchema);
