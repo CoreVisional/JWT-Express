@@ -8,6 +8,9 @@ require("dotenv").config();
 
 app.use(express.json({ limit: "10kb" }));
 
+// Define and mount standard route on the app
+app.use("/api", ApiRouter);
+
 // Port to listen to
 const PORT = process.env.PORT || 8000;
 
