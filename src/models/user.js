@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const { generateSalt, hashPassword } = require("./security");
+const { generateSalt, hashPassword } = require('../utils/security');
+const { secret } = require('../config/jwt');
 
 const { Schema } = mongoose;
 
