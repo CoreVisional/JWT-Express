@@ -75,6 +75,20 @@ const login = async (req, res, next) => {
     }
 };
 
+const logout = async (req, res, next) => {
+
+    try {
+        // Clear the cookie
+        res.clearCookie("jwt");
+
+        return res.status(200).json({ message: "Logout Successful" });
+
+    } catch (error) {
+
+        next(error);
+    }
+};
+
 const changePassword = async (req, res, next) => {
     const { email, oldPassword, newPassword } = req.body;
 
@@ -121,5 +135,6 @@ const changePassword = async (req, res, next) => {
 module.exports = {
     register,
     login,
+    logout,
     changePassword,
 };
