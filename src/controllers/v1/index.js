@@ -1,4 +1,4 @@
-const AuthController = require('./auth');
+const AuthController = require('./auth/auth');
 const UsersController = require('./users');
 
 module.exports = {
