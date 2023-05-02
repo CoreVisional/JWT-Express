@@ -32,6 +32,43 @@ const register = async (req, res, next) => {
     }
 };
 
+const login = async (req, res, next) => {
+
+    const { email, password } = req.body;
+
+    try {
+        // Find the user by email
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            // Handle the case when the user doesn't exist
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Validate the password
+        if (!user.validPassword(password)) {
+            // Handle the case when the password is incorrect
+            return res.status(401).json({ message: "Invalid password" });
+        }
+
+        // Generate the JWT token
+        const token = user.generateJWT();
+
+        return res.status(200).json({
+            user: {
+                username: user.username,
+                email: user.email,
+                token: token
+            }
+         });
+
+    } catch (error) {
+
+        next(error);
+    }
+};
+
 module.exports = {
     register,
+    login,
 };
