@@ -54,6 +54,12 @@ const login = async (req, res, next) => {
         // Generate the JWT token
         const token = user.generateJWT();
 
+        // Set JWT token as a cookie
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            sameSite: true
+        });
+
         return res.status(200).json({
             message: "Login Successful",
             user: {
