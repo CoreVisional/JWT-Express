@@ -55,6 +55,19 @@ const login = async (req, res, next) => {
         const token = user.generateJWT();
 
         return res.status(200).json({
+            message: "Login Successful",
+            user: {
+                username: user.username,
+                email: user.email,
+                token: token
+            }
+         });
+
+    } catch (error) {
+
+        next(error);
+    }
+};
             user: {
                 username: user.username,
                 email: user.email,
