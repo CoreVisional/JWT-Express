@@ -5,6 +5,9 @@ const { ControllersV1 } = require("../../controllers");
 const router = express.Router();
 
 router.post('/login', ControllersV1.AuthController.login);
+
+router.post('/logout', ControllersV1.AuthController.logout);
+
 router.put(
     '/change-password',
     jwtValidation.required,
