@@ -1,6 +1,7 @@
 const User = require("../../../models/user");
 
 const register = async (req, res, next) => {
+
     const { username, email, password } = req.body;
 
     try {
@@ -13,13 +14,20 @@ const register = async (req, res, next) => {
         }
 
         const newUser = new User({ username, email });
+
         newUser.setPassword(password);
+
         await newUser.save();
 
-        const token = newUser.generateJWT();
+        return res.status(201).json({
+            user: {
+                username: newUser.username,
+                email: newUser.email,
+            }
+         });
 
-        return res.status(201).json({ token });
     } catch (error) {
+
         next(error);
     }
 };
