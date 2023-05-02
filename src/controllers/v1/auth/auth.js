@@ -68,12 +68,43 @@ const login = async (req, res, next) => {
         next(error);
     }
 };
-            user: {
-                username: user.username,
-                email: user.email,
-                token: token
-            }
-         });
+
+const changePassword = async (req, res, next) => {
+    const { email, oldPassword, newPassword } = req.body;
+
+    try {
+        // Find the user by email
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            // Handle the case when the user doesn't exist
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Validate the old password
+        if (!user.validPassword(oldPassword)) {
+            // Handle the case when the old password is incorrect
+            return res.status(401).json({ message: "Invalid old password" });
+        }
+
+        // Set the new password
+        user.setPassword(newPassword);
+
+        const token = user.generateJWT();
+
+        // Save the updated user
+        await user.save();
+
+        return res
+            .status(200)
+            .json({
+                message: "Password changed successfully",
+                user: {
+                    username: user.username,
+                    email: user.email,
+                    token: token
+                }
+            });
 
     } catch (error) {
 
@@ -84,4 +115,5 @@ const login = async (req, res, next) => {
 module.exports = {
     register,
     login,
+    changePassword,
 };
