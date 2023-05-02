@@ -4,7 +4,7 @@ const getAllUsers = async (req, res) => {
 
     try {
 
-        const users = await User.find({});
+        const users = await User.find({}).select("-passwordHash -passwordSalt");
 
         res.status(200).json({
             status: 'success',
