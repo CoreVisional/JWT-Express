@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const dbConnection = require("./config/db");
 const ApiRouter = require("./routes");
 
@@ -7,6 +8,7 @@ const app = express();
 require("dotenv").config();
 
 app.use(express.json({ limit: "10kb" }));
+app.use(cookieParser());
 
 // Define and mount standard route on the app
 app.use("/api", ApiRouter);
